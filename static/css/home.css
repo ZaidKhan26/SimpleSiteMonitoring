@@ -1,0 +1,1576 @@
+/* Add overflow control to the root elements */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.container-fluid {
+    max-height: 100vh;
+    overflow: hidden;
+}
+
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: calc(100vh - 160px);
+    overflow: hidden;
+}
+
+:root {
+    --expiring-color: #e67e22;
+    --unknown-color: #9e9e9e;  /* Gray color for unknown status */
+}
+
+/* Sites Dashboard Section */
+.sites-dashboard {
+    flex-grow: 1;
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 15px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 320px);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+    flex-shrink: 0;
+}
+
+.section-header h2 {
+    margin-bottom: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color); /* Fallback color */
+    background: linear-gradient(90deg, var(--text-color) 0%, #9bc8ff 100%); /* Default/All Sites */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+    display: inline-block;
+    transition: background 0.3s ease; /* Add transition for smooth color change */
+}
+
+/* Header color for Healthy filter */
+#monitoringHeaderTitle.header-healthy {
+    background: linear-gradient(90deg, var(--text-color) 0%, var(--success-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+}
+
+/* Header color for Slow (warning) filter */
+#monitoringHeaderTitle.header-slow {
+    background: linear-gradient(90deg, var(--text-color) 0%, var(--warning-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+}
+
+/* Header color for Token Expiring filter */
+#monitoringHeaderTitle.header-expiring {
+    background: linear-gradient(90deg, var(--text-color) 0%, var(--expiring-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+}
+
+/* Header color for Down (error) filter */
+#monitoringHeaderTitle.header-down {
+    background: linear-gradient(90deg, var(--text-color) 0%, var(--danger-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+}
+
+/* Header color for Pending (unknown) filter */
+#monitoringHeaderTitle.header-unknown {
+    background: linear-gradient(90deg, var(--text-color) 0%, var(--unknown-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-actions .form-control {
+    min-width: 160px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background-color: rgba(0,0,0,0.1);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-color);
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.header-actions .form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.25);
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.dashboard-header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: var(--text-color);
+}
+
+/* Refresh Button */
+.btn-action {
+    background-color: var(--success-color);
+    color: white;
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.btn-action:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.btn-action.rotating {
+    animation: rotate 1s linear;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Status Summary Cards */
+.status-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 15px;
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-height: 140px;
+    overflow-y: hidden;
+    flex-shrink: 0;
+}
+
+.status-card {
+    border-radius: 10px;
+    padding: 14px;
+    background-color: rgba(0,0,0,0.2);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    min-width: 135px;
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    border-left: 4px solid transparent;
+}
+
+.status-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    background-color: rgba(0,0,0,0.2);
+}
+
+.status-card.active {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    background-color: rgba(255,255,255,0.08);
+    border-width: 4px;
+}
+
+.status-card.active:after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    height: 4px;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.status-number {
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+    transition: all 0.3s ease;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.status-label {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.8);
+    font-weight: 600;
+    margin-top: 5px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Status card colors */
+.status-card.error {
+    border-left-color: var(--danger-color);
+}
+
+.status-card.warning {
+    border-left-color: var(--warning-color);
+}
+
+.status-card.success {
+    border-left-color: var(--success-color);
+}
+
+.status-card.total {
+    border-left-color: var(--primary-color);
+}
+
+.status-card.expiring {
+    border-left-color: var(--expiring-color);
+}
+
+.status-card.unknown {
+    border-left-color: var(--unknown-color);
+}
+
+.status-card.error .status-number {
+    color: var(--danger-color);
+}
+
+.status-card.warning .status-number {
+    color: var(--warning-color);
+}
+
+.status-card.success .status-number {
+    color: var(--success-color);
+}
+
+.status-card.total .status-number {
+    color: var(--primary-color);
+}
+
+.status-card.expiring .status-number {
+    color: var(--expiring-color);
+}
+
+.status-card.unknown .status-number {
+    color: var(--unknown-color);
+}
+
+/* Active status indicator */
+.status-card.active:after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    height: 4px;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.status-card.active.error:after {
+    background-color: var(--danger-color);
+}
+
+.status-card.active.warning:after {
+    background-color: var(--warning-color);
+}
+
+.status-card.active.success:after {
+    background-color: var(--success-color);
+}
+
+.status-card.active.total:after {
+    background-color: var(--primary-color);
+}
+
+.status-card.active.expiring:after {
+    background-color: var(--expiring-color);
+}
+
+.status-card.active.unknown:after {
+    background-color: var(--unknown-color);
+}
+
+/* Logs Table Header */
+.logs-table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.logs-table-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--text-color);
+}
+
+.filter-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.form-control {
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+/* Logs Table */
+.logs-container {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex: 1;
+    min-height: 0;
+}
+
+.sites-table-container {
+    overflow-y: auto;
+    flex-grow: 1;
+    max-height: calc(100% - 50px);
+    border-radius: 8px;
+}
+
+.logs-table {
+    overflow-x: auto;
+    overflow-y: hidden;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.05);
+    background-color: rgba(0,0,0,0.15);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.logs-table th {
+    background-color: transparent;
+    padding: 14px 15px;
+    text-align: center;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    white-space: nowrap;
+    position: relative;
+    letter-spacing: 0.5px;
+}
+
+.logs-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: var(--text-color);
+    vertical-align: middle;
+    height: 52px;
+}
+
+.logs-table th.sortable {
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+    transition: background-color 0.2s;
+}
+
+.logs-table th.sortable:hover {
+    background-color: rgba(0,0,0,0.25);
+}
+
+.log-row {
+    transition: all 0.25s ease;
+}
+
+.log-row:hover {
+    background-color: rgba(255,255,255,0.05);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* Row background colors based on status */
+.log-row.error {
+    background-color: rgba(255, 69, 58, 0.1);
+}
+
+.log-row.warning {
+    background-color: rgba(255, 196, 0, 0.1);
+}
+
+.log-row.success {
+    background-color: rgba(52, 199, 89, 0.1);
+}
+
+.log-row.expiring {
+    background-color: rgba(230, 126, 34, 0.1);
+}
+
+.log-row.unknown {
+    background-color: rgba(158, 158, 158, 0.1);
+}
+
+/* Status indicator - the colored dot */
+.status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+tr:hover .status-indicator {
+    transform: translateY(-50%) scale(1.3);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.status-indicator.error {
+    background-color: var(--danger-color);
+    box-shadow: 0 0 5px rgba(255, 69, 58, 0.5);
+}
+
+.status-indicator.warning {
+    background-color: var(--warning-color);
+    box-shadow: 0 0 5px rgba(255, 196, 0, 0.5);
+}
+
+.status-indicator.success {
+    background-color: var(--success-color);
+    box-shadow: 0 0 5px rgba(0, 128, 0, 0.5);
+}
+
+.status-indicator.expiring {
+    background-color: var(--expiring-color);
+    box-shadow: 0 0 5px rgba(230, 126, 34, 0.5);
+}
+
+.status-indicator.unknown {
+    background-color: var(--unknown-color);
+    box-shadow: 0 0 5px rgba(158, 158, 158, 0.5);
+}
+
+.url-cell {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+}
+
+.url-cell a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.url-cell a:hover {
+    text-decoration: underline;
+}
+
+/* Site Grid and Cards */
+.sites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+    gap: 20px;
+}
+
+.site-card {
+    background-color: var(--light-color);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: 1px solid var(--border-color);
+}
+
+.site-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.site-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: linear-gradient(135deg, #1a4387 0%, #2563eb 50%, #1e429f 100%);
+    color: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.site-header h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.site-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-edit, .btn-delete {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s;
+}
+
+.btn-edit {
+    background-color: var(--light-color);
+    color: var(--text-color);
+}
+
+.btn-edit:hover {
+    background-color: #e2e6ea;
+}
+
+.btn-delete {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+}
+
+.site-details {
+    padding: 15px;
+    color: var(--text-color);
+}
+
+.site-details p {
+    margin: 10px 0;
+    display: flex;
+}
+
+.site-details strong {
+    min-width: 100px;
+    display: inline-block;
+    color: var(--secondary-text-color);
+}
+
+.site-url {
+    color: #4d8cce;
+    text-decoration: none;
+}
+
+.site-url:hover {
+    text-decoration: underline;
+    color: #5a9ae0;
+}
+
+/* Empty state */
+.empty-state {
+    background-color: var(--light-color);
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    color: var(--secondary-text-color);
+    border: 1px solid var(--border-color);
+}
+
+.empty-state p {
+    margin-bottom: 15px;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 20px;
+    width: 90%;
+    max-width: 500px;
+    color: var(--text-color);
+    position: relative;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+}
+
+.close {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--secondary-text-color);
+}
+
+.close:hover {
+    color: var(--text-color);
+}
+
+.modal h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: var(--text-color);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--secondary-text-color);
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    background-color: var(--input-bg);
+    color: var(--text-color);
+}
+
+.form-group.checkbox {
+    display: flex;
+    align-items: center;
+}
+
+.form-group.checkbox input {
+    width: auto;
+    margin-right: 10px;
+}
+
+.form-group.checkbox label {
+    margin-bottom: 0;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-primary, .btn-secondary, .btn-danger {
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #2b62a5;
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* SSL Days styling */
+.ssl-days-cell {
+    white-space: nowrap;
+}
+
+.ssl-days {
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.ssl-days.expiring {
+    background-color: rgba(230, 126, 34, 0.2);
+    color: var(--expiring-color);
+    border: 1px solid rgba(230, 126, 34, 0.3);
+}
+
+.ssl-days.not-monitored {
+    color: var(--secondary-text-color);
+    font-style: italic;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .dashboard-container {
+        height: calc(100vh - 120px);
+        gap: 15px;
+    }
+    
+    .status-summary {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        max-height: 110px;
+        padding: 12px;
+        gap: 12px;
+    }
+    
+    .sites-dashboard {
+        max-height: calc(100vh - 250px);
+        padding: 12px;
+    }
+    
+    .status-card {
+        min-width: 110px;
+        max-width: 150px;
+        padding: 10px;
+        background-color: rgba(0,0,0,0.2);
+    }
+    
+    .status-number {
+        font-size: 1.8rem;
+    }
+    
+    .status-label {
+        font-size: 0.8rem;
+        margin-top: 3px;
+        letter-spacing: 0.3px;
+    }
+    
+    .sites-table th, .sites-table td {
+        padding: 10px 6px;
+        font-size: 0.9rem;
+    }
+    
+    .section-header {
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+    }
+    
+    .section-header h2 {
+        font-size: 1.3rem;
+    }
+    
+    .header-actions .form-control {
+        min-width: 120px;
+    }
+    
+    .btn-action {
+        width: 38px;
+        height: 38px;
+    }
+    
+    .status-card.active:after {
+        bottom: -6px;
+        height: 3px;
+    }
+}
+
+/* Sortable table headers */
+.logs-table th.sortable {
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+}
+
+.logs-table th.sortable:hover {
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+.sort-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logs-table th:nth-child(2) .sort-header,
+.logs-table th:nth-child(3) .sort-header,
+.logs-table th:nth-child(4) .sort-header {
+    justify-content: flex-start;
+}
+
+.sort-icon {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 8px;
+    position: relative;
+}
+
+th.sorting-asc .sort-icon:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid var(--text-color);
+}
+
+th.sorting-desc .sort-icon:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid var(--text-color);
+}
+
+/* Pending scan styling */
+.pending-scan {
+    color: var(--secondary-text-color);
+    font-style: italic;
+}
+
+/* Tags styling */
+.tags-cell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+
+.tag-badge {
+    display: inline-block;
+    padding: 3px 6px;
+    margin: 2px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 4px;
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.no-tags {
+    color: var(--secondary-text-color);
+    font-style: italic;
+    font-size: 0.85rem;
+}
+
+/* Tag input styling */
+.tags-input-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 5px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--input-bg);
+    margin-bottom: 10px;
+    min-height: 38px;
+}
+
+.tags-input {
+    flex: 1;
+    padding: 5px;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--text-color);
+}
+
+.tag-item {
+    display: inline-flex;
+    align-items: center;
+    margin: 2px;
+    padding: 2px 8px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+.tag-close {
+    margin-left: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.2em;
+    line-height: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .tags-cell {
+        max-width: 100px;
+    }
+    
+    .tag-badge {
+        padding: 2px 4px;
+        font-size: 0.7rem;
+    }
+}
+
+/* Enhanced status text */
+.status-text {
+    display: inline-block;
+    vertical-align: middle;
+    font-weight: 500;
+    white-space: nowrap;
+    text-align: left;
+}
+
+/* Table and Status Styles - Comprehensive implementation */
+
+/* Table container */
+.logs-container {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Logs Table enhanced styling */
+.logs-table {
+    overflow-x: auto;
+    overflow-y: hidden;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--light-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Scroll container for the table body */
+.table-scroll-container {
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex: 1;
+    min-height: 0;
+}
+
+/* Table styling */
+.logs-table table,
+.table-scroll-container table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+}
+
+/* Header styling */
+.logs-table th {
+    background-color: transparent;
+    padding: 14px 15px;
+    text-align: center;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    white-space: nowrap;
+    position: relative;
+}
+
+/* Rounded corners for header */
+.logs-table th:first-child {
+    width: 120px;
+    min-width: 120px;
+    max-width: 120px;
+    text-align: center;
+    border-top-left-radius: 8px;
+}
+
+.logs-table th:last-child {
+    border-top-right-radius: 8px;
+}
+
+/* Cell styling */
+.logs-table td {
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
+    vertical-align: middle;
+    height: 52px;
+}
+
+/* Ensure alignment between header and body */
+.logs-table thead th,
+.table-scroll-container td {
+    width: auto;
+    text-align: center;
+}
+
+/* Status column styling */
+.logs-table td:first-child {
+    position: relative;
+    width: 120px;
+    min-width: 120px;
+    max-width: 120px;
+    text-align: left;
+    padding-left: 35px;
+}
+
+/* Text-based columns (name, url, tags) alignment */
+.logs-table th:nth-child(2),
+.logs-table th:nth-child(3),
+.logs-table th:nth-child(4) {
+    text-align: left;
+}
+
+/* Data columns remain center-aligned */
+.logs-table th:nth-child(5),
+.logs-table th:nth-child(6),
+.logs-table th:nth-child(7),
+.logs-table th:nth-child(8) {
+    text-align: left;
+}
+
+/* Status text styling */
+.status-text {
+    display: inline-block;
+    vertical-align: middle;
+    font-weight: 500;
+    white-space: nowrap;
+    text-align: left;
+}
+
+/* Status indicator - the colored dot */
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Status indicator hover effect */
+tr:hover .status-indicator {
+    transform: translateY(-50%) scale(1.2);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Status indicator colors */
+.status-indicator.error {
+    background-color: var(--danger-color);
+    box-shadow: 0 0 5px rgba(255, 69, 58, 0.5);
+}
+
+.status-indicator.warning {
+    background-color: var(--warning-color);
+    box-shadow: 0 0 5px rgba(255, 196, 0, 0.5);
+}
+
+.status-indicator.success {
+    background-color: var(--success-color);
+    box-shadow: 0 0 5px rgba(0, 128, 0, 0.5);
+}
+
+.status-indicator.expiring {
+    background-color: var(--expiring-color);
+    box-shadow: 0 0 5px rgba(230, 126, 34, 0.5);
+}
+
+.status-indicator.unknown {
+    background-color: var(--unknown-color);
+    box-shadow: 0 0 5px rgba(158, 158, 158, 0.5);
+}
+
+/* Row styling */
+.log-row {
+    transition: all 0.2s ease;
+}
+
+.log-row:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    transform: translateY(-1px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Row background colors based on status */
+.log-row.error {
+    background-color: rgba(255, 69, 58, 0.05);
+}
+
+.log-row.warning {
+    background-color: rgba(255, 196, 0, 0.05);
+}
+
+.log-row.success {
+    background-color: rgba(52, 199, 89, 0.05);
+}
+
+.log-row.expiring {
+    background-color: rgba(230, 126, 34, 0.05);
+}
+
+.log-row.unknown {
+    background-color: rgba(158, 158, 158, 0.05);
+}
+
+/* URL styling */
+.url-cell {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+}
+
+.url-cell a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.url-cell a:hover {
+    text-decoration: underline;
+}
+
+/* SSL styling */
+.ssl-days-cell {
+    white-space: nowrap;
+}
+
+.ssl-days {
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.ssl-days.expiring {
+    background-color: rgba(230, 126, 34, 0.2);
+    color: var(--expiring-color);
+    border: 1px solid rgba(230, 126, 34, 0.3);
+}
+
+.ssl-days.not-monitored {
+    color: var(--secondary-text-color);
+    font-style: italic;
+}
+
+/* Sort header styling */
+.sort-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sort-icon {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 8px;
+    position: relative;
+}
+
+th.sorting-asc .sort-icon:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid var(--text-color);
+}
+
+th.sorting-desc .sort-icon:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid var(--text-color);
+}
+
+/* Last row styling */
+.logs-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* No sites message */
+.no-sites-message {
+    padding: 30px !important;
+    text-align: center;
+    color: var(--secondary-text-color);
+    font-style: italic;
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Tags styling */
+.tags-cell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+
+/* Make sortable headers look clickable */
+.logs-table th.sortable {
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+}
+
+.logs-table th.sortable:hover {
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+/* Pending scan styling */
+.pending-scan {
+    color: var(--secondary-text-color);
+    font-style: italic;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .logs-table th:nth-child(5),
+    .logs-table td:nth-child(5),
+    .logs-table th:nth-child(6),
+    .logs-table td:nth-child(6) {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .logs-table th:nth-child(4),
+    .logs-table td:nth-child(4) {
+        display: none;
+    }
+    
+    .logs-table td:first-child {
+        padding-left: 30px;
+    }
+    
+    .status-indicator {
+        left: 10px;
+    }
+    
+    .sites-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .site-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .site-actions {
+        margin-top: 10px;
+        width: 100%;
+    }
+    
+    .btn-edit, .btn-delete {
+        flex: 1;
+        text-align: center;
+    }
+    
+    .site-details strong {
+        min-width: 80px;
+    }
+    
+    .status-summary {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .status-card {
+        width: 100%;
+        padding: 15px;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .logs-table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .filter-controls {
+        width: 100%;
+    }
+    
+    .form-control {
+        width: 100%;
+    }
+    
+    .logs-table th, 
+    .logs-table td {
+        padding: 8px 10px;
+    }
+    
+    .tags-cell {
+        max-width: 100px;
+    }
+    
+    .tag-badge {
+        padding: 2px 4px;
+        font-size: 0.7rem;
+    }
+}
+
+/* Column alignment - comprehensive rules */
+
+/* Headers alignment */
+.logs-table th {
+    text-align: center;
+}
+
+/* Status column */
+.logs-table th:first-child {
+    width: 120px;
+    min-width: 120px;
+    max-width: 120px;
+    text-align: center;
+    border-top-left-radius: 8px;
+}
+
+.logs-table td:first-child {
+    position: relative;
+    width: 120px;
+    min-width: 120px;
+    max-width: 120px;
+    text-align: left;
+    padding-left: 35px;
+}
+
+/* Text columns (name, url, tags) */
+.logs-table th:nth-child(2),
+.logs-table th:nth-child(3),
+.logs-table th:nth-child(4) {
+    text-align: left;
+}
+
+.logs-table td:nth-child(2),
+.logs-table td:nth-child(3),
+.logs-table td:nth-child(4) {
+    text-align: left;
+}
+
+/* Data columns (times, load time, etc.) */
+.logs-table th:nth-child(5),
+.logs-table th:nth-child(6),
+.logs-table th:nth-child(7),
+.logs-table th:nth-child(8) {
+    text-align: left;
+}
+
+.logs-table td:nth-child(5),
+.logs-table td:nth-child(6),
+.logs-table td:nth-child(7),
+.logs-table td:nth-child(8) {
+    text-align: left;
+}
+
+/* Let's create a new file with only the comprehensive column alignment rules */
+/* Sort header alignment for text vs numeric columns */
+.sort-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Text columns (Status content, Name, URL, Tags) get left-aligned content */
+.logs-table td:nth-child(1),
+.logs-table td:nth-child(2),
+.logs-table td:nth-child(3),
+.logs-table td:nth-child(4) {
+    text-align: left;
+}
+
+/* Status header remains centered */
+.logs-table th:first-child {
+    text-align: center;
+}
+
+/* Text column headers (Name, URL, Tags) get left alignment */
+.logs-table th:nth-child(2),
+.logs-table th:nth-child(3),
+.logs-table th:nth-child(4) {
+    text-align: left;
+}
+
+/* Data column headers and content (times, load time, etc.) get center alignment */
+.logs-table th:nth-child(5),
+.logs-table th:nth-child(6), 
+.logs-table th:nth-child(7),
+.logs-table th:nth-child(8) {
+    text-align: left;
+}
+
+.logs-table td:nth-child(5),
+.logs-table td:nth-child(6),
+.logs-table td:nth-child(7),
+.logs-table td:nth-child(8) {
+    text-align: left;
+}
+
+/* Update sort headers for left-aligned columns */
+.logs-table th:nth-child(2) .sort-header,
+.logs-table th:nth-child(3) .sort-header,
+.logs-table th:nth-child(4) .sort-header {
+    justify-content: flex-start;
+}
+
+/* Status text explicit left alignment */
+.status-text {
+    text-align: left;
+}
+
+.sites-table-container {
+    overflow-y: auto;
+    flex-grow: 1;
+    max-height: calc(100% - 50px);
+    border-radius: 8px;
+}
+
+/* Status cards styling */
+.status-card {
+    border-radius: 8px;
+    padding: 12px;
+    background-color: var(--bg-color);
+    box-shadow: var(--card-shadow);
+    min-width: 140px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* Mobile styles specific to the table display */
+@media (max-width: 768px) {
+    .sites-table th, .sites-table td {
+        padding: 8px 6px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Make cards more consistent with all sites label in uppercase */
+.status-card.total .status-label {
+    color: rgba(255,255,255,0.9);
+}
+
+/* Add gradient background to table headers */
+.logs-table thead tr {
+    background: linear-gradient(135deg, #1a4387 0%, #2563eb 50%, #1e429f 100%); /* Default/All Sites */
+    transition: background 0.3s ease; /* For smooth color change */
+}
+
+/* New styles for filter-specific table header row backgrounds */
+#monitoringTableHeaderRow.header-row-healthy {
+    background: linear-gradient(135deg, #1e7e34 0%, var(--success-color) 50%, #155724 100%);
+}
+
+#monitoringTableHeaderRow.header-row-slow {
+    background: linear-gradient(135deg, #cca300 0%, var(--warning-color) 50%, #b38f00 100%);
+}
+
+#monitoringTableHeaderRow.header-row-expiring {
+    background: linear-gradient(135deg, #c0651a 0%, var(--expiring-color) 50%, #a04f10 100%);
+}
+
+#monitoringTableHeaderRow.header-row-down {
+    background: linear-gradient(135deg, #b02a37 0%, var(--danger-color) 50%, #8c1c27 100%);
+}
+
+#monitoringTableHeaderRow.header-row-unknown {
+    background: linear-gradient(135deg, #757575 0%, var(--unknown-color) 50%, #616161 100%);
+}
+
+/* Let's create a new file with only the comprehensive column alignment rules */
+.logs-table th:nth-child(3) .sort-header,
+.logs-table th:nth-child(4) .sort-header,
+.logs-table th:nth-child(5) .sort-header,
+.logs-table th:nth-child(6) .sort-header,
+.logs-table th:nth-child(7) .sort-header,
+.logs-table th:nth-child(8) .sort-header {
+    justify-content: flex-start;
+}
+
+/* Status text explicit left alignment */
+.status-text {
+    text-align: left;
+}
